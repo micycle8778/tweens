@@ -6,7 +6,7 @@ You can install it just like any other nimble library. Get
 and run `nimble install https://github.com/RainbowAsteroids/tweens`.
 
 The documentation was written
-[here]("https://rainbowasteroids.github.io/tweens//tweens.html"), so for now, 
+[here](https://rainbowasteroids.github.io/tweens//tweens.html), so for now, 
 I'll just show [an example](https://github.com/RainbowAsteroids/tweens/blob/master/tests/test.nim)
 you can run by doing `nimble test`:
 
