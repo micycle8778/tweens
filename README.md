@@ -3,7 +3,7 @@ tweens is a basic tweening library for Nim.
 
 You can install it just like any other nimble library. Get 
 [choosenim](https://github.com/dom96/choosenim),
-and run `nimble install https://github.com/RainbowAsteroids/tweens`.
+and run `nimble install tweens`.
 
 The documentation was written
 [here](https://rainbowasteroids.github.io/tweens//tweens.html), so for now, 
