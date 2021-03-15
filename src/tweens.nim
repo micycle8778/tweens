@@ -32,9 +32,10 @@
 import math
 
 type 
+    EasingFunction = proc(start, goal, perc: float): float
     TweenKind* = enum
         ## The types of easing functions a tween could have.
-        tkLinear, tkEaseIn, tkEaseOut, tkEaseInOut
+        tkLinear, tkEaseIn, tkEaseOut, tkEaseInOut, tkCustom
 
     Tween* = object
         ## The actual tween object. Should be created by
@@ -48,6 +49,7 @@ type
         of tkLinear: discard
         of tkEaseIn, tkEaseOut: p: int ## Parameter for easeIn and easeOut
         of tkEaseInOut: p1, p2: int ## Parameters for easeInOut
+        of tkCustom: fn: EasingFunction 
 
 func lerp*(start, goal, perc: float): float =
     ## Basic linear interpolation. When `perc` is some value between zero and one,
@@ -93,6 +95,13 @@ func easeInOut*(start, goal, perc: float, p1 = 2, p2 = 2): float =
     ## [Desmos graph](https://www.desmos.com/calculator/st399mrg1o)
     lerp(start, goal, easeInOut(perc, p1, p2))
 
+proc init(t: var Tween, start, goal: float, steps: Natural) =
+    t.start = start
+    t.val = start
+    t.goal = goal
+    t.steps = steps
+    t.step = 0
+
 proc createTween*(kind: TweenKind, start, goal: float, 
                      steps: Natural, p = 2, p2 = p): Tween =
     ## Creates a [Tween](#Tween). This should be used instead of the default
@@ -106,12 +115,16 @@ proc createTween*(kind: TweenKind, start, goal: float,
             result = Tween(kind: kind, p: p)
         of tkEaseInOut:
             result = Tween(kind: kind, p1: p, p2: p2)
+        of tkCustom:
+            assert false
 
-    result.start = start
-    result.val = start
-    result.goal = goal
-    result.steps = steps
-    result.step = 0
+    result.init(start, goal, steps)
+
+proc createTween*(fn: EasingFunction, start, goal: float, 
+            steps: Natural): Tween =
+    result = Tween(kind: tkCustom, fn: fn)
+
+    result.init(start, goal, steps)
 
 proc set*(t: var Tween) =
     ## Set the value of a [Tween](#Tween) according to the easing function it 
@@ -128,6 +141,8 @@ proc set*(t: var Tween) =
             t.val = easeOut(t.start, t.goal, perc, t.p)
         of tkEaseInOut:
             t.val = easeInOut(t.start, t.goal, perc, t.p1, t.p2)
+        of tkCustom:
+            t.val = t.fn(t.start, t.goal, perc)
 
 proc inc*(t: var Tween, amt = 1.Natural) =
     ## Increment `t.step` by `amt` and set the value of the tween.
