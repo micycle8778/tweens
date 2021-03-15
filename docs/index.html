@@ -91,12 +91,15 @@ function main() {
     </select>
   </div>
   <ul class="simple simple-toc" id="toc-list">
-<li>
+<ul class="simple"><li><a class="reference" id="basic-tweening-library-for-nim_toc" href="#basic-tweening-library-for-nim">Basic tweening library for Nim</a></li>
+</ul><li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#TweenKind"
+      <li><a class="reference" href="#EasingFunction"
+    title="EasingFunction = proc (start, goal, perc: float): float">EasingFunction</a></li>
+  <li><a class="reference" href="#TweenKind"
     title="TweenKind = enum
-  tkLinear, tkEaseIn, tkEaseOut, tkEaseInOut">TweenKind</a></li>
+  tkLinear, tkEaseIn, tkEaseOut, tkEaseInOut, tkCustom">TweenKind</a></li>
   <li><a class="reference" href="#Tween"
     title="Tween = object
   start: float
@@ -110,7 +113,9 @@ function main() {
   of tkEaseIn, tkEaseOut:
     p: int                   ## Parameter for easeIn and easeOut
   of tkEaseInOut:
-    p1, p2: int              ## Parameters for easeInOut">Tween</a></li>
+    p1, p2: int              ## Parameters for easeInOut
+  of tkCustom:
+    fn: EasingFunction">Tween</a></li>
 
   </ul>
 </li>
@@ -120,6 +125,8 @@ function main() {
       <ul class="simple nested-toc-section">createTween
       <li><a class="reference" href="#createTween%2CTweenKind%2Cfloat%2Cfloat%2CNatural%2Cint"
     title="createTween(kind: TweenKind; start, goal: float; steps: Natural; p = 2; p2 = p): Tween">createTween,<wbr>TweenKind,<wbr>float,<wbr>float,<wbr>Natural,<wbr>int</a></li>
+  <li><a class="reference" href="#createTween%2CEasingFunction%2Cfloat%2Cfloat%2CNatural"
+    title="createTween(fn: EasingFunction; start, goal: float; steps: Natural): Tween">createTween,<wbr>EasingFunction,<wbr>float,<wbr>float,<wbr>Natural</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">set
@@ -144,7 +151,9 @@ function main() {
   <a class="reference reference-toplevel" href="#13" id="63">Funcs</a>
   <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">easeInOut
-      <li><a class="reference" href="#easeInOut%2Cfloat%2Cfloat%2Cfloat%2Cint%2Cint"
+      <li><a class="reference" href="#easeInOut%2Cfloat%2Cint%2Cint"
+    title="easeInOut(x: float; p1 = 2; p2 = 2): float">easeInOut,<wbr>float,<wbr>int,<wbr>int</a></li>
+  <li><a class="reference" href="#easeInOut%2Cfloat%2Cfloat%2Cfloat%2Cint%2Cint"
     title="easeInOut(start, goal, perc: float; p1 = 2; p2 = 2): float">easeInOut,<wbr>float,<wbr>float,<wbr>float,<wbr>int,<wbr>int</a></li>
 
   </ul>
@@ -154,13 +163,22 @@ function main() {
 
   </ul>
   <ul class="simple nested-toc-section">easeOut
-      <li><a class="reference" href="#easeOut%2Cfloat%2Cfloat%2Cfloat%2Cint"
+      <li><a class="reference" href="#easeOut%2Cfloat%2Cint"
+    title="easeOut(x: float; p = 2): float">easeOut,<wbr>float,<wbr>int</a></li>
+  <li><a class="reference" href="#easeOut%2Cfloat%2Cfloat%2Cfloat%2Cint"
     title="easeOut(start, goal, perc: float; p = 2): float">easeOut,<wbr>float,<wbr>float,<wbr>float,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">easeIn
-      <li><a class="reference" href="#easeIn%2Cfloat%2Cfloat%2Cfloat%2Cint"
+      <li><a class="reference" href="#easeIn%2Cfloat%2Cint"
+    title="easeIn(x: float; p = 2): float">easeIn,<wbr>float,<wbr>int</a></li>
+  <li><a class="reference" href="#easeIn%2Cfloat%2Cfloat%2Cfloat%2Cint"
     title="easeIn(start, goal, perc: float; p = 2): float">easeIn,<wbr>float,<wbr>float,<wbr>float,<wbr>int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">flip
+      <li><a class="reference" href="#flip%2Cfloat"
+    title="flip(x: float): float">flip,<wbr>float</a></li>
 
   </ul>
 
@@ -173,8 +191,8 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc"><p>Basic tweening library for Nim</p>
-<p>First you should select the preferred easing function (and any parameters if applicable) from the list found in <a class="reference external" href="#TweenKind">TweenKind</a>.</p>
+  <p class="module-desc">
+<h2><a class="toc-backref" id="basic-tweening-library-for-nim" href="#basic-tweening-library-for-nim">Basic tweening library for Nim</a></h2><p>First you should select the preferred easing function (and any parameters if applicable) from the list found in <a class="reference external" href="#TweenKind">TweenKind</a>.</p>
 <p>Next, instance your tween using <a class="reference external" href="#createTween,TweenKind,float,float,Natural,int">createTween</a> procedure</p>
 <p>Finally, run a loop until <tt class="docutils literal"><span class="pre">t.step == t.steps</span></tt>, incrementing your tween in every interation.</p>
 <p>Example:</p>
@@ -195,13 +213,38 @@ function main() {
 
 <span class="Identifier">echo</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
 </pre></p>
+<p>tweens also supports custom easing functions. Simply replace the <tt class="docutils literal"><span class="pre">kind</span></tt> parameter with an <a class="reference external" href="#EasingFunction">EasingFunction</a>, and the tween will set its value according to the function you've defined.</p>
+<p>Example:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">tweens</span>
+<span class="Keyword">import</span> <span class="Identifier">os</span>
+
+<span class="Keyword">func</span> <span class="Identifier">customFunction</span><span class="Punctuation">(</span><span class="Identifier">start</span><span class="Punctuation">,</span> <span class="Identifier">goal</span><span class="Punctuation">,</span> <span class="Identifier">perc</span><span class="Punctuation">:</span> <span class="Identifier">float</span><span class="Punctuation">)</span><span class="Punctuation">:</span> <span class="Identifier">float</span> <span class="Operator">=</span>
+    <span class="Keyword">if</span> <span class="Identifier">perc</span> <span class="Operator">&gt;</span> <span class="FloatNumber">0.7</span><span class="Punctuation">:</span> <span class="Identifier">goal</span>
+    <span class="Keyword">else</span><span class="Punctuation">:</span> <span class="Identifier">start</span>
+
+<span class="Keyword">var</span> <span class="Identifier">t</span> <span class="Operator">=</span> <span class="Identifier">createTween</span><span class="Punctuation">(</span><span class="Identifier">customFunction</span><span class="Punctuation">,</span> <span class="DecNumber">0</span><span class="Punctuation">,</span> <span class="DecNumber">100</span><span class="Punctuation">,</span> <span class="DecNumber">100</span><span class="Punctuation">)</span>
+
+<span class="Keyword">while</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">step</span> <span class="Operator">!=</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">steps</span><span class="Punctuation">:</span>
+    <span class="Identifier">echo</span> <span class="StringLit">&quot;Step: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">step</span><span class="Punctuation">,</span> <span class="StringLit">&quot; Value: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">t</span><span class="Operator">.</span><span class="Identifier">val</span>
+    
+    <span class="Identifier">sleep</span><span class="Punctuation">(</span><span class="DecNumber">50</span><span class="Punctuation">)</span>
+    
+    <span class="Identifier">inc</span> <span class="Identifier">t</span>
+</pre></p>
 </p>
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
+<a id="EasingFunction"></a>
+<dt><pre><a href="tweens.html#EasingFunction"><span class="Identifier">EasingFunction</span></a> <span class="Other">=</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">start</span><span class="Other">,</span> <span class="Identifier">goal</span><span class="Other">,</span> <span class="Identifier">perc</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="TweenKind"></a>
 <dt><pre><a href="tweens.html#TweenKind"><span class="Identifier">TweenKind</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">tkLinear</span><span class="Other">,</span> <span class="Identifier">tkEaseIn</span><span class="Other">,</span> <span class="Identifier">tkEaseOut</span><span class="Other">,</span> <span class="Identifier">tkEaseInOut</span></pre></dt>
+  <span class="Identifier">tkLinear</span><span class="Other">,</span> <span class="Identifier">tkEaseIn</span><span class="Other">,</span> <span class="Identifier">tkEaseOut</span><span class="Other">,</span> <span class="Identifier">tkEaseInOut</span><span class="Other">,</span> <span class="Identifier">tkCustom</span></pre></dt>
 <dd>
 
 The types of easing functions a tween could have.
@@ -221,6 +264,8 @@ The types of easing functions a tween could have.
     <span class="Identifier">p</span><span class="Other">:</span> <span class="Identifier">int</span>                   <span class="Comment">## Parameter for easeIn and easeOut</span>
   <span class="Keyword">of</span> <span class="Identifier">tkEaseInOut</span><span class="Other">:</span>
     <span class="Identifier">p1</span><span class="Other">,</span> <span class="Identifier">p2</span><span class="Other">:</span> <span class="Identifier">int</span>              <span class="Comment">## Parameters for easeInOut</span>
+  <span class="Keyword">of</span> <span class="Identifier">tkCustom</span><span class="Other">:</span>
+    <span class="Identifier">fn</span><span class="Other">:</span> <a href="tweens.html#EasingFunction"><span class="Identifier">EasingFunction</span></a>
   </pre></dt>
 <dd>
 
@@ -234,28 +279,40 @@ The actual tween object. Should be created by <a class="reference external" href
 <dl class="item">
 <a id="createTween,TweenKind,float,float,Natural,int"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#createTween%2CTweenKind%2Cfloat%2Cfloat%2CNatural%2Cint"><span class="Identifier">createTween</span></a><span class="Other">(</span><span class="Identifier">kind</span><span class="Other">:</span> <a href="tweens.html#TweenKind"><span class="Identifier">TweenKind</span></a><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">,</span> <span class="Identifier">goal</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">steps</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">;</span> <span class="Identifier">p</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">;</span>
-                 <span class="Identifier">p2</span> <span class="Other">=</span> <span class="Identifier">p</span><span class="Other">)</span><span class="Other">:</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+                 <span class="Identifier">p2</span> <span class="Other">=</span> <span class="Identifier">p</span><span class="Other">)</span><span class="Other">:</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Creates a <a class="reference external" href="#Tween">Tween</a>. This should be used instead of the default constructor. <tt class="docutils literal"><span class="pre">p</span></tt> is passed into <tt class="docutils literal"><span class="pre">easeIn</span></tt> and <tt class="docutils literal"><span class="pre">easeOut</span></tt>. <tt class="docutils literal"><span class="pre">p</span></tt> and <tt class="docutils literal"><span class="pre">p2</span></tt> are passed into <tt class="docutils literal"><span class="pre">easeInOut</span></tt> on the <tt class="docutils literal"><span class="pre">easeIn</span></tt> side and <tt class="docutils literal"><span class="pre">easeOut</span></tt> side respectively.
+<p>Creates a <a class="reference external" href="#Tween">Tween</a>. This should be used instead of the default constructor. <tt class="docutils literal"><span class="pre">p</span></tt> is passed into <tt class="docutils literal"><span class="pre">easeIn</span></tt> and <tt class="docutils literal"><span class="pre">easeOut</span></tt>. <tt class="docutils literal"><span class="pre">p</span></tt> and <tt class="docutils literal"><span class="pre">p2</span></tt> are passed into <tt class="docutils literal"><span class="pre">easeInOut</span></tt> on the <tt class="docutils literal"><span class="pre">easeIn</span></tt> side and <tt class="docutils literal"><span class="pre">easeOut</span></tt> side respectively.</p>
+<p>Will raise a <tt class="docutils literal"><span class="pre">ValueError</span></tt> if <tt class="docutils literal"><span class="pre">kind</span></tt> is <tt class="docutils literal"><span class="pre">tkCustom</span></tt>. For defining custom tweens, use <a class="reference external" href="#createTween,EasingFunction,float,float,Natural">createTween</a>.</p>
+
+
+</dd>
+<a id="createTween,EasingFunction,float,float,Natural"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#createTween%2CEasingFunction%2Cfloat%2Cfloat%2CNatural"><span class="Identifier">createTween</span></a><span class="Other">(</span><span class="Identifier">fn</span><span class="Other">:</span> <a href="tweens.html#EasingFunction"><span class="Identifier">EasingFunction</span></a><span class="Other">;</span> <span class="Identifier">start</span><span class="Other">,</span> <span class="Identifier">goal</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">steps</span><span class="Other">:</span> <span class="Identifier">Natural</span><span class="Other">)</span><span class="Other">:</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Creates a <a class="reference external" href="#Tween">Tween</a> with kind of <tt class="docutils literal"><span class="pre">tkCustom</span></tt> and using the user-defined easing function <tt class="docutils literal"><span class="pre">fn</span></tt> instead of one of the built-in ones.
 
 </dd>
 <a id="set,Tween"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#set%2CTween"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#set%2CTween"><span class="Identifier">set</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Set the value of a <a class="reference external" href="#Tween">Tween</a> according to the easing function it needs Should only be used if you decide to set the tween's <tt class="docutils literal"><span class="pre">step</span></tt> without using <a class="reference external" href="#inc,Tween">inc</a> or <a class="reference external" href="#dec,Tween">dec</a>.
 
 </dd>
 <a id="inc,Tween"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#inc%2CTween"><span class="Identifier">inc</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">;</span> <span class="Identifier">amt</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">.</span><span class="Identifier">Natural</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#inc%2CTween"><span class="Identifier">inc</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">;</span> <span class="Identifier">amt</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">.</span><span class="Identifier">Natural</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Increment <tt class="docutils literal"><span class="pre">t.step</span></tt> by <tt class="docutils literal"><span class="pre">amt</span></tt> and set the value of the tween. Prevents <tt class="docutils literal"><span class="pre">t.step</span></tt> from going higher than the max, <tt class="docutils literal"><span class="pre">t.steps</span></tt>, so this should be the preferred way of changing <tt class="docutils literal"><span class="pre">t.step</span></tt>.
 
 </dd>
 <a id="dec,Tween"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#dec%2CTween"><span class="Identifier">dec</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">;</span> <span class="Identifier">amt</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">.</span><span class="Identifier">Natural</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#dec%2CTween"><span class="Identifier">dec</span></a><span class="Other">(</span><span class="Identifier">t</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="tweens.html#Tween"><span class="Identifier">Tween</span></a><span class="Other">;</span> <span class="Identifier">amt</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">.</span><span class="Identifier">Natural</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Decrement <tt class="docutils literal"><span class="pre">t.step</span></tt> by <tt class="docutils literal"><span class="pre">amt</span></tt> and set the value of the tween. Prevents <tt class="docutils literal"><span class="pre">t.step</span></tt> from going below zero, so this should be the preferred way of changing <tt class="docutils literal"><span class="pre">t.step</span></tt>.
@@ -275,6 +332,13 @@ Decrement <tt class="docutils literal"><span class="pre">t.step</span></tt> by <
 
 
 </dd>
+<a id="easeIn,float,int"></a>
+<dt><pre><span class="Keyword">func</span> <a href="#easeIn%2Cfloat%2Cint"><span class="Identifier">easeIn</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">p</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Backend function for <a class="reference external" href="#easeIn,float,float,float,int">easeIn</a>. May be useful for custom easing functions.
+
+</dd>
 <a id="easeIn,float,float,float,int"></a>
 <dt><pre><span class="Keyword">func</span> <a href="#easeIn%2Cfloat%2Cfloat%2Cfloat%2Cint"><span class="Identifier">easeIn</span></a><span class="Other">(</span><span class="Identifier">start</span><span class="Other">,</span> <span class="Identifier">goal</span><span class="Other">,</span> <span class="Identifier">perc</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">p</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -284,6 +348,20 @@ Decrement <tt class="docutils literal"><span class="pre">t.step</span></tt> by <
 
 
 </dd>
+<a id="flip,float"></a>
+<dt><pre><span class="Keyword">func</span> <a href="#flip%2Cfloat"><span class="Identifier">flip</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Backend function for <a class="reference external" href="#easeOut,float,int">easeOut</a>. Equivalent to <tt class="docutils literal"><span class="pre">1 - x</span></tt>. May be useful for custom easing functions.
+
+</dd>
+<a id="easeOut,float,int"></a>
+<dt><pre><span class="Keyword">func</span> <a href="#easeOut%2Cfloat%2Cint"><span class="Identifier">easeOut</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">p</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Backend function for <a class="reference external" href="#easeOut,float,float,float,int">easeOut</a>. May be useful for custom easing functions.
+
+</dd>
 <a id="easeOut,float,float,float,int"></a>
 <dt><pre><span class="Keyword">func</span> <a href="#easeOut%2Cfloat%2Cfloat%2Cfloat%2Cint"><span class="Identifier">easeOut</span></a><span class="Other">(</span><span class="Identifier">start</span><span class="Other">,</span> <span class="Identifier">goal</span><span class="Other">,</span> <span class="Identifier">perc</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">p</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -291,6 +369,13 @@ Decrement <tt class="docutils literal"><span class="pre">t.step</span></tt> by <
 <p>Opposite of <a class="reference external" href="#easeIn,float,float,float,int">easeIn</a>. Instead of the rate of increase being higher with higher values of <tt class="docutils literal"><span class="pre">perc</span></tt>, the rate of increase slows down with higher values of <tt class="docutils literal"><span class="pre">perc</span></tt>. <tt class="docutils literal"><span class="pre">p</span></tt> still has the same effect.</p>
 <p><a class="reference external" href="https://www.desmos.com/calculator/0xp9wkdm1l">Desmos graph</a></p>
 
+
+</dd>
+<a id="easeInOut,float,int,int"></a>
+<dt><pre><span class="Keyword">func</span> <a href="#easeInOut%2Cfloat%2Cint%2Cint"><span class="Identifier">easeInOut</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">;</span> <span class="Identifier">p1</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">;</span> <span class="Identifier">p2</span> <span class="Other">=</span> <span class="DecNumber">2</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Backend functions for <a class="reference external" href="#easeOut,float,float,float,int,int">easeOut</a>. May be usefulfor custom easing functions.
 
 </dd>
 <a id="easeInOut,float,float,float,int,int"></a>
@@ -313,7 +398,7 @@ Decrement <tt class="docutils literal"><span class="pre">t.step</span></tt> by <
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-03-09 23:05:28 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-03-15 18:29:07 UTC</small>
       </div>
     </div>
   </div>

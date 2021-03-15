@@ -1,4 +1,4 @@
-## Basic tweening library for Nim
+## ## Basic tweening library for Nim
 ##
 ## First you should select the preferred easing function (and any parameters 
 ## if applicable) from the list found in [TweenKind](#TweenKind).
@@ -28,11 +28,34 @@
 ## 
 ## echo()
 ## ```
-
+##
+## tweens also supports custom easing functions. Simply replace the `kind`
+## parameter with an [EasingFunction](#EasingFunction), and the tween will set
+## its value according to the function you've defined.
+##
+## Example:
+## ```nim
+## import tweens
+## import os
+## 
+## func customFunction(start, goal, perc: float): float =
+##     if perc > 0.7: goal
+##     else: start 
+## 
+## var t = createTween(customFunction, 0, 100, 100)
+## 
+## while t.step != t.steps:
+##     echo "Step: ", t.step, " Value: ", t.val
+## 
+##     sleep(50)
+## 
+##     inc t
+## ```
 import math
 
 type 
-    EasingFunction = proc(start, goal, perc: float): float
+    EasingFunction* = proc(start, goal, perc: float): float
+
     TweenKind* = enum
         ## The types of easing functions a tween could have.
         tkLinear, tkEaseIn, tkEaseOut, tkEaseInOut, tkCustom
@@ -60,7 +83,9 @@ func lerp*(start, goal, perc: float): float =
     ## [Desmos graph](https://www.desmos.com/calculator/iytbrpz5c5)
     start + (goal - start) * perc
 
-func easeIn(x: float, p = 2): float = 
+func easeIn*(x: float, p = 2): float = 
+    ## Backend function for [easeIn](#easeIn,float,float,float,int). May be
+    ## useful for custom easing functions.
     pow(x, p.float)
 func easeIn*(start, goal, perc: float, p = 2): float =
     ## Like [lerp](#lerp,float,float,float), except the rate of increase is 
@@ -71,9 +96,13 @@ func easeIn*(start, goal, perc: float, p = 2): float =
     ## [Desmos graph](https://www.desmos.com/calculator/ain22cxoyx)
     lerp(start, goal, easeIn(perc, p))
 
-func flip(x: float): float = 
+func flip*(x: float): float = 
+    ## Backend function for [easeOut](#easeOut,float,int). Equivalent to `1 - x`. May
+    ## be useful for custom easing functions.
     1 - x
-func easeOut(x: float, p = 2): float = 
+func easeOut*(x: float, p = 2): float = 
+    ## Backend function for [easeOut](#easeOut,float,float,float,int). May be
+    ## useful for custom easing functions.
     flip(easeIn(flip(x), p))
 func easeOut*(start, goal, perc: float, p = 2): float =
     ## Opposite of [easeIn](#easeIn,float,float,float,int). Instead of
@@ -84,7 +113,9 @@ func easeOut*(start, goal, perc: float, p = 2): float =
     ## [Desmos graph](https://www.desmos.com/calculator/0xp9wkdm1l)
     lerp(start, goal, easeOut(perc, p))
 
-func easeInOut(x: float, p1 = 2, p2 = 2): float =
+func easeInOut*(x: float, p1 = 2, p2 = 2): float =
+    ## Backend functions for [easeOut](#easeOut,float,float,float,int,int). May
+    ## be usefulfor custom easing functions.
     lerp(easeIn(x, p1), easeOut(x, p2), x)
 func easeInOut*(start, goal, perc: float, p1 = 2, p2 = 2): float =
     ## A mix between [easeIn](#easeIn,float,float,float,int) and 
@@ -108,6 +139,9 @@ proc createTween*(kind: TweenKind, start, goal: float,
     ## constructor. `p` is passed into `easeIn` and `easeOut`. `p` and `p2` are
     ## passed into `easeInOut` on the `easeIn` side and `easeOut` side
     ## respectively.
+    ##
+    ## Will raise a `ValueError` if `kind` is `tkCustom`. For defining custom
+    ## tweens, use [createTween](#createTween,EasingFunction,float,float,Natural).
     case kind:
         of tkLinear:
             result = Tween(kind: kind)
@@ -116,12 +150,14 @@ proc createTween*(kind: TweenKind, start, goal: float,
         of tkEaseInOut:
             result = Tween(kind: kind, p1: p, p2: p2)
         of tkCustom:
-            assert false
+            raise ValueError.newException("Do not use createTween(TweenKind, float, float, Natural, int, int) for custom tweens. Use createTween(EasingFunction, float, float, natural) instead.")
 
     result.init(start, goal, steps)
 
 proc createTween*(fn: EasingFunction, start, goal: float, 
             steps: Natural): Tween =
+    ## Creates a [Tween](#Tween) with kind of `tkCustom` and using the
+    ## user-defined easing function `fn` instead of one of the built-in ones.
     result = Tween(kind: tkCustom, fn: fn)
 
     result.init(start, goal, steps)
